@@ -1,6 +1,7 @@
 const sendEmail = require("../Order/sendEmail");
 const Order = require("../../models/Order");
 const Product = require("../../models/ProductData");
+const resources = require("../../config/resources");
 const cancelUserOrder = async (req, res) => {
   const orderID = req.body.orderID;
   try {
@@ -13,13 +14,14 @@ const cancelUserOrder = async (req, res) => {
     );
     sendEmail(req.session.passport.user, "cancelled");
     res.status(200).send({
-      status: "success",
+      status: resources.status.success,
       message: `Order with Order ID ${orderID} is cancelled  `,
     });
   } catch (err) {
-    res
-      .status(500)
-      .send({ status: "fail", message: `An error has occured ${err}` });
+    res.status(500).send({
+      status: resources.status.fail,
+      message: resources.messages.error.generic(err),
+    });
   }
 };
 module.exports = { cancelUserOrder };

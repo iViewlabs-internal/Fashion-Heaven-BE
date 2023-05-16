@@ -1,7 +1,6 @@
-const User = require("../../modles/UserData");
+const User = require("../../models/UserData");
 const transporter = require("../../config/connectEmail");
 const jwt = require("jsonwebtoken");
-const tokenData = require("../../modles/tokenData");
 const resetPass = async (req, res) => {
   const { email } = req.body;
   try {

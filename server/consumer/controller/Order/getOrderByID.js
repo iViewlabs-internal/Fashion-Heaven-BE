@@ -1,5 +1,6 @@
 const Order = require("../../models/Order");
 const Product = require("../../models/ProductData");
+const resources = require("../../config/resources");
 const getUserOrder = async (req, res) => {
   const orderID = req.body.orderID;
   try {
@@ -15,14 +16,15 @@ const getUserOrder = async (req, res) => {
       productData: productDetails,
     };
     res.status(200).send({
-      status: "success",
+      status: resources.status.success,
       message: `Here is the data of order ID ${orderID}`,
       data: allOrderData,
     });
   } catch (err) {
-    res
-      .status(500)
-      .send({ status: "fail", message: `An error has occured ${err}` });
+    res.status(500).send({
+      status: resources.status.fail,
+      message: resources.messages.error.generic(err),
+    });
   }
 };
 module.exports = { getUserOrder };

@@ -1,4 +1,4 @@
-const Product = require("../../modles/ProductData");
+const Product = require("../../models/ProductData");
 const filter = async (req, res) => {
   const audience = req.query.audience || null;
   const category = req.query.category || null;

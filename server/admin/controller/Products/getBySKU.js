@@ -1,4 +1,4 @@
-const Product = require("../../modles/ProductData");
+const Product = require("../../models/ProductData");
 const getProduct = async (req, res) => {
   const currSKU = req.params.SKU;
   try {

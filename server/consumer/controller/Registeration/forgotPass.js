@@ -1,11 +1,12 @@
 const Consumer = require("../../models/Consumer");
 const transporter = require("../../config/connectEmail");
 const jwt = require("jsonwebtoken");
+const resources = require("../../config/resources");
 const resetPass = async (req, res) => {
   const { email } = req.body;
   try {
     const isPresentEmail = await Consumer.find({ email: email });
-    if (isPresentEmail == null) {
+    if (isPresentEmail.length == 0) {
       res.send({ status: "fail", message: "This email dosen't exists" });
     } else {
       const token = jwt.sign(
@@ -24,19 +25,25 @@ const resetPass = async (req, res) => {
       };
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
-          res.send({ status: "fail", message: `An error has occurred ${err}` });
+          res.status(500).send({
+            status: resources.status.fail,
+            message: resources.messages.error.generic(err),
+          });
         } else {
           console.log("Email sent " + info);
         }
       });
-      res.send({
-        status: "success",
+      res.status(200).send({
+        status: resources.status.success,
         message: "The link was sent to you email",
         data: userUrl,
       });
     }
   } catch (err) {
-    res.send({ status: "fail", message: `An error has occurred ${err}` });
+    res.status(500).send({
+      status: resources.status.fail,
+      message: resources.messages.error.generic(err),
+    });
   }
 };
 module.exports = { resetPass };

@@ -1,0 +1,692 @@
+openapi: 3.0.3
+info:
+  title: Consumer Ecommerce API
+  description: |-
+    This is the Consymer API documentation
+  termsOfService: https://www.google.com/
+  version: 1.0.11
+
+servers:
+  - url: http://localhost:8001
+tags:
+  - name: Registeration
+    description: All the API for consumer login/sign up
+  - name: Cart
+    description: All the cart API
+  - name: Order
+    description: Operations about Order
+  - name: Product
+    description: Operations about Products
+  - name: Profile
+    description: Operations about Profile
+
+paths:
+  /signup:
+    post:
+      tags:
+        - Registeration
+      summary: Add user
+      description: Used to add all the consumer detailes and sends email
+      requestBody:
+        description: Used to add new user to the DB
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConsumerRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConsumerResponse"
+        "400":
+          description: Invaild Request
+          content:
+            application/json:
+              example:
+                message: "Invaild Request confirm the credentials and try again"
+                status: "Fail"
+        "500":
+          description: Internal sever error
+          content:
+            application/json:
+              example:
+                message: "A server error has occurred"
+                status: "Fail"
+  /login:
+    post:
+      tags:
+        - Registeration
+      summary: Login User
+      description: Used by the user to login into the system
+      requestBody:
+        description: Used to add new user to the DB
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConsumerLoginRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConsumerResponse"
+        "400":
+          description: Incorrect details
+          content:
+            application/json:
+              example:
+                message: "Confirm the credentials and try again"
+                status: "Fail"
+        "500":
+          description: Internal sever error
+          content:
+            application/json:
+              example:
+                message: "A server error has occurred"
+                status: "Fail"
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+  /forget:
+    post:
+      tags:
+        - Registeration
+      summary: User Forgot his password
+      description: Used by user when he forgets his password
+      requestBody:
+        description: Used to add new user to the DB
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConsumerForgotRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                message: "The link was sent to you email"
+                status: "success"
+                data: "LINK"
+        "500":
+          description: Internal sever error
+          content:
+            application/json:
+              example:
+                message: "A server error has occurred"
+                status: "Fail"
+  /reset/{token}/{id}:
+    post:
+      parameters:
+        - name: token
+          in: path
+          description: Token giving in the email
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: ID the consumer that was given in the email.
+          required: true
+          schema:
+            type: string
+      tags:
+        - Registeration
+      summary: Reset User Password
+      description: Used by user when he wants to reset his password
+      requestBody:
+        description: Used to add new user to the DB
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewPasswordRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                status: "success"
+                message: "The link was sent to you email"
+                newPass: "New Password"
+        "404":
+          description: User not found
+          content:
+            application/json:
+              example:
+                message: "This user dosen't exits."
+                status: "Fail"
+        "500":
+          description: Internal sever error
+          content:
+            application/json:
+              example:
+                message: "A server error has occurred"
+                status: "Fail"
+  /getUser:
+    get:
+      tags:
+        - Profile
+      summary: Get all the user detailes
+      description: Used to get all the user detailes
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConsumerResponse"
+        "500":
+          description: Internal sever error
+          content:
+            application/json:
+              example:
+                message: "A server error has occurred"
+                status: "Fail"
+  /getUserAddress:
+    get:
+      tags:
+        - Profile
+      summary: Get all the user detailes
+      description: Used to get all the user detailes
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AddressSchema"
+        "500":
+          description: Internal sever error
+          content:
+            application/json:
+              example:
+                message: "A server error has occurred"
+                status: "Fail"
+  /addAddress:
+    post:
+      tags:
+        - Profile
+      summary: Add Address for user
+      description: User can add address
+      requestBody:
+        description: Enter the address
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddressSchema"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConsumerResponse"
+        "500":
+          description: Internal sever error
+          content:
+            application/json:
+              example:
+                message: "A server error has occurred"
+                status: "Fail"
+  /deleteAddress:
+    post:
+      tags:
+        - Profile
+      summary: Add Address for user
+      description: User can add address
+      requestBody:
+        description: Enter the address
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/deleteAddressRequest"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConsumerResponse"
+        "500":
+          description: Internal sever error
+          content:
+            application/json:
+              example:
+                message: "A server error has occurred"
+                status: "Fail"
+  /updateConsumer:
+    post:
+      tags:
+        - Profile
+      summary: Add Address for user
+      description: User can add address
+      requestBody:
+        description: Enter the address
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/updateConsumerRequest"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConsumerResponse"
+        "500":
+          description: Internal sever error
+          content:
+            application/json:
+              example:
+                message: "A server error has occurred"
+                status: "Fail"
+  /addToCart:
+    post:
+      tags:
+        - Cart
+      summary: Add Address for user
+      description: User can add address
+      requestBody:
+        description: Enter the address
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/addToCartRequest"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/addToCartResponse"
+        "500":
+          description: Internal sever error
+          content:
+            application/json:
+              example:
+                message: "A server error has occurred"
+                status: "Fail"
+  /getCartItems:
+    get:
+      tags:
+        - Cart
+      summary: Add Address for user
+      description: User can add address
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getCartItemsResponse"
+        "500":
+          description: Internal sever error
+          content:
+            application/json:
+              example:
+                message: "A server error has occurred"
+                status: "Fail"
+components:
+  schemas:
+    AddressSchema:
+      type: object
+      properties:
+        country:
+          type: string
+        state:
+          type: string
+        city:
+          type: string
+        zipCode:
+          type: integer
+        addressLine1:
+          type: string
+        addressLine2:
+          type: string
+    ConsumerResponse:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: Pink
+        lastName:
+          type: string
+          example: Sharma
+        email:
+          type: string
+          example: Pink123@gmail.com
+        password:
+          type: string
+        phoneNumber:
+          type: integer
+          format: int64
+          example: 987456356
+        schema:
+          type: array
+          items:
+            $ref: "#/components/schemas/AddressSchema"
+    ConsumerRequest:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: Pink
+        lastName:
+          type: string
+          example: Sharma
+        email:
+          type: string
+          example: Pink123@gmail.com
+        password:
+          type: string
+        confirmPassword:
+          type: string
+        phoneNumber:
+          type: integer
+          format: int64
+          example: 9874563564
+    ConsumerLoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          example: Example@email.com
+        password:
+          type: string
+    ConsumerForgotRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          example: Example@email.com
+    NewPasswordRequest:
+      type: object
+      properties:
+        password:
+          type: string
+          example: password
+        confirmPassword:
+          type: string
+          example: password
+    Order:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        petId:
+          type: integer
+          format: int64
+          example: 198772
+        quantity:
+          type: integer
+          format: int32
+          example: 7
+        shipDate:
+          type: string
+          format: date-time
+        status:
+          type: string
+          description: Order Status
+          example: approved
+          enum:
+            - placed
+            - approved
+            - delivered
+        complete:
+          type: boolean
+      xml:
+        name: order
+    Customer:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 100000
+        username:
+          type: string
+          example: fehguy
+        address:
+          type: array
+          xml:
+            name: addresses
+            wrapped: true
+          items:
+            $ref: "#/components/schemas/Address"
+      xml:
+        name: customer
+    Address:
+      type: object
+      properties:
+        street:
+          type: string
+          example: 437 Lytton
+        city:
+          type: string
+          example: Palo Alto
+        state:
+          type: string
+          example: CA
+        zip:
+          type: string
+          example: "94301"
+      xml:
+        name: address
+    deleteAddressRequest:
+      type: object
+      properties:
+        addressID:
+          type: string
+          example: "1231414"
+    updateConsumerRequest:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: "Pink"
+        lasttName:
+          type: string
+          example: "Green"
+        email:
+          type: string
+          example: "123@email.com"
+        phoneNumber:
+          type: string
+          example: "929292929"
+        age:
+          type: string
+          example: "32"
+    addToCartRequest:
+      type: object
+      properties:
+        productID:
+          type: string
+          example: "Pink"
+        color:
+          type: string
+          example: "Green"
+        size:
+          type: string
+          example: "123@email.com"
+    addToCartResponse:
+      type: object
+      properties:
+        productID:
+          type: string
+          example: "Pink"
+        consumerID:
+          type: string
+          example: "Green"
+        size:
+          type: string
+          example: "123@email.com"
+        quantity:
+          type: integer
+          example: 12
+        _id:
+          type: string
+          example: "123"
+    getCartItemsResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "success"
+        schema:
+          type: array
+          items:
+            $ref: "#/components/schemas/addToCartResponse"
+        message:
+          type: string
+          example: "Here are all the product in your cart"
+        subTotal:
+          type: integer
+          example: "134"
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: Dogs
+      xml:
+        name: category
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        username:
+          type: string
+          example: theUser
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: James
+        email:
+          type: string
+          example: john@email.com
+        password:
+          type: string
+          example: "12345"
+        phone:
+          type: string
+          example: "12345"
+        userStatus:
+          type: integer
+          description: User Status
+          format: int32
+          example: 1
+      xml:
+        name: user
+    Tag:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+      xml:
+        name: tag
+    Pet:
+      required:
+        - name
+        - photoUrls
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        name:
+          type: string
+          example: doggie
+        category:
+          $ref: "#/components/schemas/Category"
+        photoUrls:
+          type: array
+          xml:
+            wrapped: true
+          items:
+            type: string
+            xml:
+              name: photoUrl
+        tags:
+          type: array
+          xml:
+            wrapped: true
+          items:
+            $ref: "#/components/schemas/Tag"
+        status:
+          type: string
+          description: pet status in the store
+          enum:
+            - available
+            - pending
+            - sold
+      xml:
+        name: pet
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+      xml:
+        name: "##default"
+  requestBodies:
+    Pet:
+      description: Pet object that needs to be added to the store
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Pet"
+        application/xml:
+          schema:
+            $ref: "#/components/schemas/Pet"
+    UserArray:
+      description: List of user object
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/User"
+  securitySchemes:
+    petstore_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://petstore3.swagger.io/oauth/authorize
+          scopes:
+            write:pets: modify pets in your account
+            read:pets: read your pets
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header

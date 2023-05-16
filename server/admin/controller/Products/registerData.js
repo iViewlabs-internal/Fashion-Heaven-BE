@@ -1,4 +1,4 @@
-const Product = require("../../modles/ProductData");
+const Product = require("../../models/ProductData");
 const randomSKU = () => {
   let min = 10000;
   let max = 99999;

@@ -1,5 +1,5 @@
-const Cart = require("../../modles/CartData");
-const Product = require("../../modles/ProductData");
+const Cart = require("../../models/CartData");
+const Product = require("../../models/ProductData");
 const addProduct = async (req, res) => {
   const { SKU, color, size } = req.body;
   const UserID = req.session.passport.user;

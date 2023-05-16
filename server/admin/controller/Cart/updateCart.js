@@ -1,8 +1,9 @@
-const Cart = require("../../modles/CartData");
+const Cart = require("../../models/CartData");
+const Product = require("../../models/ProductData");
 const update = async (req, res) => {
   const { SKU, size, quantity } = req.body;
   try {
-    const product = await Cart.findOne({ SKU: SKU });
+    const product = await Product.findOne({ SKU: SKU });
     console.log(product);
     if (quantity > product.quantity) {
       res.send({

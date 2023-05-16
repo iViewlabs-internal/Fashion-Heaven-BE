@@ -1,4 +1,4 @@
-const Product = require("../../modles/ProductData");
+const Product = require("../../models/ProductData");
 const getProducts = async (req, res) => {
   const currAdminId = req.session.passport.user;
   try {

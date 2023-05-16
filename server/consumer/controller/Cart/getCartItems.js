@@ -1,5 +1,6 @@
 const ConsumerCart = require("../../models/ConsumerCart");
 const Product = require("../../models/ProductData");
+const resources = require("../../config/resources");
 const allItems = async (req, res) => {
   const consumerID = req.session.passport.user;
   try {
@@ -27,14 +28,17 @@ const allItems = async (req, res) => {
       allCartItems.push(tempItem);
       subTotalCost += currProductItem[0].price;
     }
-    res.send({
-      status: "success",
+    res.status(200).send({
+      status: resources.status.success,
       productData: allCartItems,
-      message: "Here are all the products that you need",
+      message: resources.messages.success.fetched,
       subTotal: subTotalCost,
     });
   } catch (err) {
-    res.send({ status: "fail", message: `An error has occurred ${err}` });
+    res.status(500).send({
+      status: resources.status.fail,
+      message: resources.messages.error.generic(err),
+    });
   }
 };
 module.exports = { allItems };

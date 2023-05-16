@@ -1,31 +1,33 @@
 const Consumer = require("../../models/Consumer");
 const bcrypt = require("bcrypt");
 const tokenData = require("../../models/tokenData");
+const resources = require("../../config/resources");
 const changePassword = async (req, res) => {
   let { token, id } = req.params;
-  console.log(token, id);
   const { password, confirmPassword } = req.body;
   try {
     const userID = id;
     const currUser = await Consumer.find({ _id: userID });
-    if (currUser == null) {
-      res
-        .status(404)
-        .send({ result: "This user dosen't exits.", status: "fail" });
+    // console.log(currUser === null);
+    let errorFlag = false;
+    let errorMessage = "";
+    if (currUser.length === 0) {
+      errorFlag = true;
+      errorMessage = "This user dosen't exits.";
     }
     // console.log(currUser);
     const currToken = await tokenData.find({ token: token });
     if (currToken.length != 0) {
-      res.send({ status: "fair", message: "The link here is expired" });
+      errorFlag = true;
+      errorMessage = "The link here is expired";
     } else {
       if (await bcrypt.compare(password, currUser[0].password)) {
-        res.send({
-          result: "The new password can't be same as the old one.",
-          status: "fail",
-        });
+        errorFlag = true;
+        errorMessage = "The new password can't be same as the old one.";
       }
       if (password !== confirmPassword) {
-        res.send({ result: "Your pasword dosen't match!", status: "fail" });
+        errorFlag = true;
+        errorMessage = "Your pasword dosen't match!";
       }
       const hash = async (password, saltRounds) => {
         try {
@@ -48,15 +50,25 @@ const changePassword = async (req, res) => {
       });
       newToken.save();
       const result = await Consumer.updateOne({ _id: userID }, update);
-      console.log(result);
-      res.send({
-        result: "Password is updated Sucessfully!",
-        status: "success ",
+      // console.log(result);
+    }
+    if (errorFlag === true) {
+      res.status(500).send({
+        status: resources.status.fail,
+        message: resources.messages.error.generic(err),
+      });
+    } else {
+      res.status(200).send({
+        message: resources.messages.success.updated,
+        status: resources.status.success,
         newPass: password,
       });
     }
   } catch (err) {
-    res.send({ result: `An error has occurred ${err}`, status: "fail" });
+    res.status(500).send({
+      status: resources.status.fail,
+      message: resources.messages.error.generic(err),
+    });
   }
 };
 module.exports = { changePassword };

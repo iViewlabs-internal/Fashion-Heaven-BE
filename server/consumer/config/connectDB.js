@@ -7,7 +7,7 @@ const connectDB = async (DBURL) => {
     });
     console.log("Connected to the Database!");
   } catch (err) {
-    console.log("Error has occured " + err);
+    console.log(resources.messages.error.generic(err));
   }
 };
 module.exports = connectDB;

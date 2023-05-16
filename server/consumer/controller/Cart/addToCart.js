@@ -1,8 +1,9 @@
 const CunsomerCart = require("../../models/ConsumerCart");
+const resources = require("../../config/resources");
 const addProduct = async (req, res) => {
-  const { productID, color, size } = req.body;
-  const consumerID = req.session.passport.user;
   try {
+    const { productID, color, size } = req.body;
+    const consumerID = req.session.passport.user;
     const newConsumerCart = new CunsomerCart({
       productID: productID,
       consumerID: consumerID,
@@ -12,14 +13,15 @@ const addProduct = async (req, res) => {
     newConsumerCart.save();
     // console.log(cartItem);
     res.status(200).send({
-      status: "success",
+      status: resources.status.success,
       data: newConsumerCart,
-      message: "Product Added to cart",
+      message: resources.messages.success.created,
     });
   } catch (err) {
-    res
-      .status(500)
-      .send({ status: "fail", message: `An error has occurred ${err}` });
+    res.status(500).send({
+      status: resources.status.fail,
+      message: resources.messages.error.generic(err),
+    });
   }
 };
 module.exports = { addProduct };

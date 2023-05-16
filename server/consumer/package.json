@@ -26,6 +26,8 @@
     "nodemailer": "^6.9.1",
     "nodemon": "^2.0.22",
     "passport": "^0.6.0",
+    "passport-google-oauth2": "^0.2.0",
+    "passport-google-strategy": "^1.0.3",
     "passport-local": "^1.0.0",
     "swagger": "^0.0.1",
     "swagger-ui-express": "^4.6.3",

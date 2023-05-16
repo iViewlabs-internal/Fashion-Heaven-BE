@@ -1,6 +1,7 @@
 const Consumer = require("../../models/Consumer");
 const transporter = require("../../config/connectEmail");
 const bcrypt = require("bcrypt");
+const resources = require("../../config/resources");
 const registerData = async (req, res) => {
   let { firstName, lastName, email, password, confirmPassword, phoneNumber } =
     req.body;
@@ -23,16 +24,25 @@ const registerData = async (req, res) => {
       // console.log("Email ALready Present");
       res
         .status(400)
-        .send({ message: "Email ALready Present", status: "Fail" });
+        .send({
+          message: "Email ALready Present",
+          status: resources.status.fail,
+        });
     } else if (isPresentPhoneNo.length != 0) {
       res
         .status(400)
-        .send({ message: "Phone number Already Present", status: "Fail" });
+        .send({
+          message: "Phone number Already Present",
+          status: resources.status.fail,
+        });
       // console.log("Phone number Already Present");
     } else if (confirmPassword != password) {
       res
         .status(400)
-        .send({ message: "Password dosen't match", status: "Fail" });
+        .send({
+          message: "Password dosen't match",
+          status: resources.status.fail,
+        });
       // console.log("Password dosen't match");
     } else {
       const newConsumer = new Consumer({
@@ -53,9 +63,9 @@ const registerData = async (req, res) => {
         };
         transporter.sendMail(mailOptions, (err, info) => {
           if (err) {
-            res.send({
-              status: "fail",
-              message: `An error has occurred ${err}`,
+            res.status(500).send({
+              status: resources.status.fail,
+              message: resources.messages.error.generic(err),
             });
           } else {
             console.log("Email sent " + info);
@@ -63,20 +73,21 @@ const registerData = async (req, res) => {
         });
       } catch (err) {
         res.status(500).send({
-          status: "fail",
-          message: `A Nodemailer error has occurred: ${err}`,
+          status: resources.status.fail,
+          message: resources.messages.error.generic(err),
         });
       }
       res.status(200).send({
-        msg: "Your data is inserted sucessfully",
+        message: "Your data is inserted sucessfully",
         data: newConsumer,
-        status: "Sucess",
+        status: resources.status.success,
       });
     }
   } catch (err) {
-    res
-      .status(500)
-      .send({ status: "fail", message: `An error has occurred ${err}` });
+    res.status(500).send({
+      status: resources.status.fail,
+      message: resources.messages.error.generic(err),
+    });
   }
 };
 module.exports = { registerData };

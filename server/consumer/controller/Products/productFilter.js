@@ -1,4 +1,5 @@
 const Product = require("../../models/ProductData");
+const resources = require("../../config/resources");
 const filter = async (req, res) => {
   const audience = req.query.audience || null;
   const category = req.query.category || null;
@@ -14,14 +15,15 @@ const filter = async (req, res) => {
   try {
     const filterProducts = await Product.find(searchObj);
     res.status(200).send({
-      status: "success",
+      status: resources.messages.success,
       message: `Here is your data that you needed`,
       data: filterProducts,
     });
   } catch (err) {
-    res
-      .status(500)
-      .send({ status: "fail", message: `An error has occurred ${err}` });
+    res.status(500).send({
+      status: resources.status.fail,
+      message: resources.messages.error.generic(err),
+    });
   }
 };
 module.exports = { filter };

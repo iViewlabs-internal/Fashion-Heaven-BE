@@ -1,19 +1,28 @@
 const ConsumerCart = require("../../models/ConsumerCart");
+const resources = require("../../config/resources");
 const deleteItem = async (req, res) => {
-  const productID = req.body.productID;
+  const cartItemID = req.body.cartItemID;
   try {
-    const deleteProduct = await ConsumerCart.deleteOne({
-      productID: productID,
-    });
-    res.status(200).send({
-      status: "success",
-      data: deleteProduct,
-      message: `Product in cart with Product ID: ${productID} is Deleted`,
-    });
+    const cartItem = await ConsumerCart.findOne({ _id: cartItemID });
+    if (cartItem != null) {
+      const deleteProduct = await ConsumerCart.deleteOne({
+        _id: cartItemID,
+      });
+      res.status(200).send({
+        status: resources.status.success,
+        message: `Product in cart with Cart ID: ${cartItemID} is Deleted`,
+      });
+    } else {
+      res.status(400).send({
+        status: resources.status.fail,
+        message: resources.messages.error.notFound,
+      });
+    }
   } catch (err) {
-    res
-      .status(500)
-      .send({ status: "fail", message: `An error has occurred ${err}` });
+    res.status(500).send({
+      status: resources.status.fail,
+      message: resources.messages.error.generic(err),
+    });
   }
 };
 module.exports = { deleteItem };

@@ -12,6 +12,7 @@ const getCartItems = require("../controller/Cart/getCartItems");
 const updateCart = require("../controller/Cart/updateCart");
 const deleteFromCart = require("../controller/Cart/deleteFromCart");
 const getFeedItems = require("../controller/Products/getFeedProducts");
+const getBySKU = require("../controller/Products/getProductSKU");
 const getUserProfile = require("../controller/Profile/getUserProfile");
 const addAddress = require("../controller/Profile/addAddress");
 const getAllAddress = require("../controller/Profile/getAllAdress");
@@ -24,6 +25,7 @@ const getOrderByID = require("../controller/Order/getOrderByID");
 const cancelOrder = require("../controller/Order/cancelOrder");
 const filterOrders = require("../controller/Order/filterOrders");
 const checkOutCart = require("../controller/Cart/checkOutCart");
+const searchProduct = require("../controller/Products/searchProduct");
 router.get("/", (req, res) => {
   res.status(201).send({
     status: "success",
@@ -43,8 +45,15 @@ router.post(
 );
 router.get("/success", async (req, res) => {
   const currID = req.session.passport.user;
-  const ConsumerData = await Consumer.findOne({ _id: currID });
-  res.status(200).send({ data: ConsumerData, staus: "success" });
+  try {
+    const ConsumerData = await Consumer.findOne({ _id: currID });
+    res.status(200).send({ data: ConsumerData, staus: "success" });
+  } catch (err) {
+    res.status(500).send({
+      staus: "fail",
+      message: `An error has occured ${err}`,
+    });
+  }
 });
 router.get("/failure", (req, res) => {
   res.status(403).send({ status: "fail" });
@@ -72,9 +81,15 @@ router.post(
 //Product API
 router.get("/productFilter", checkLogin.isAuthenticated, productFilter.filter);
 router.get(
-  "/feedProducts",
+  "/feedProducts/:page?/:limit?",
   checkLogin.isAuthenticated,
   getFeedItems.getProduct
+);
+router.post("/getBySKU", checkLogin.isAuthenticated, getBySKU.getProduct);
+router.post(
+  "/searchProduct/:keyword?",
+  checkLogin.isAuthenticated,
+  searchProduct.getItem
 );
 // Cart API
 router.post("/addToCart", checkLogin.isAuthenticated, addToCart.addProduct);

@@ -1,6 +1,6 @@
-const User = require("../../modles/UserData");
+const User = require("../../models/UserData");
 const bcrypt = require("bcrypt");
-const tokenData = require("../../modles/tokenData");
+const tokenData = require("../../models/tokenData");
 const changePassword = async (req, res) => {
   let { token, id } = req.params;
   console.log(token, id);

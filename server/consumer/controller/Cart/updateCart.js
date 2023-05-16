@@ -1,5 +1,6 @@
 const ConsumerCart = require("../../models/ConsumerCart");
 const Product = require("../../models/ProductData");
+const resources = require("../../config/resources");
 const update = async (req, res) => {
   const { productID, size, quantity } = req.body;
   try {
@@ -7,7 +8,7 @@ const update = async (req, res) => {
     console.log(product);
     if (quantity > product.quantity) {
       res.status(400).send({
-        status: "fail",
+        status: resources.status.fail,
         message: `Product out of stock. Remaining items ${product.quantity}`,
       });
     } else {
@@ -17,20 +18,22 @@ const update = async (req, res) => {
           { $set: { size: size, quantity: quantity } }
         );
         res.status(200).send({
-          status: "success",
+          status: resources.status.success,
           data: updateData,
-          message: `Product in cart with productID ${productID} is updated"`,
+          message: resources.messages.success.updated,
         });
       } catch (err) {
-        res
-          .status(500)
-          .send({ status: "fail", message: `An error has occurred ${err}` });
+        res.status(500).send({
+          status: resources.status.fail,
+          message: resources.messages.error.generic(err),
+        });
       }
     }
   } catch (err) {
-    res
-      .status(500)
-      .send({ status: "fail", message: `An error has occurred ${err}` });
+    res.status(500).send({
+      status: resources.status.fail,
+      message: resources.messages.error.generic(err),
+    });
   }
 };
 

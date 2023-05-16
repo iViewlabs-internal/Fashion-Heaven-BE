@@ -1,4 +1,4 @@
-const Cart = require("../../modles/CartData");
+const Cart = require("../../models/CartData");
 const allItems = async (req, res) => {
   const UserID = req.session.passport.user;
   try {

@@ -1,3 +1,4 @@
+const resources = require("../../config/resources");
 const Consumer = require("../../models/Consumer");
 const updateInfo = async (req, res) => {
   const consumerID = req.session.passport.user;
@@ -19,24 +20,25 @@ const updateInfo = async (req, res) => {
         }
       );
       res.status(200).send({
-        status: "success",
-        message: `The user with user id ${consumerID} is updated`,
+        status: resources.status.success,
+        message: resources.messages.success.updated,
       });
     } else if (isPresentEmail != null) {
       res.status(400).send({
-        status: "fail",
+        status: resources.status.fail,
         message: `${email} email is already present try again`,
       });
     } else {
       res.status(400).send({
-        status: "fail",
+        status: resources.status.fail,
         message: `${phoneNumber} phone number is already present try again`,
       });
     }
   } catch (err) {
-    res
-      .status(500)
-      .send({ status: "fail", message: `An error has occurred ${err}` });
+    res.status(500).send({
+      status: resources.status.fail,
+      message: resources.messages.error.generic(err),
+    });
   }
 };
 module.exports = { updateInfo };

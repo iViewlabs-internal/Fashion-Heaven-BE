@@ -11,7 +11,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const YAML = require("yamljs");
 const swaggerUi = require("swagger-ui-express");
-const swaggerDocument = YAML.load("./routes/swagger.yaml");
+const swaggerDocument = YAML.load("./API/swagger.yaml");
 
 // Serve the Swagger UI
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
@@ -21,9 +21,10 @@ app.use(flash());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(
   session({
-    secret: "secret",
+    secret: "keyboard cat",
     resave: false,
     saveUninitialized: false,
+    cookie: { secure: false }, // Use secure: false for testing over HTTP
   })
 );
 app.use(cors());
@@ -39,6 +40,23 @@ initializePassport(
   },
   (id) => {
     return Consumer.findOne({ _id: id });
+  }
+);
+const googleInitialize = require("./config/googleAuth");
+googleInitialize(
+  passport,
+  async (email) => {
+    return await Consumer.findOne({ email: email });
+  },
+  async (id) => {
+    return await Consumer.findOne({ _id: id });
+  }
+);
+app.get(
+  "/googleAuth",
+  passport.authenticate("google", { failureRedirect: "/failure" }),
+  (req, res) => {
+    res.redirect("/success");
   }
 );
 const PORT = process.env.PORT || 9001;

@@ -20,9 +20,9 @@ const addressSchema = new mongoose.Schema({
   },
 });
 const ConsumerSchema = new mongoose.Schema({
-  firstName: { type: String, require: true, minlegth: 2, maxlegth: 20 },
-  lastName: { type: String, require: true, minlegth: 2, maxlegth: 20 },
-  email: { type: String, require: true },
+  firstName: { type: String, minlegth: 2, maxlegth: 20 },
+  lastName: { type: String, minlegth: 2, maxlegth: 20 },
+  email: { type: String },
   password: {
     type: String,
   },

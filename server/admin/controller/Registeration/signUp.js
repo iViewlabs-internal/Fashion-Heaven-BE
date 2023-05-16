@@ -1,10 +1,9 @@
-const User = require("../../modles/UserData");
+const User = require("../../models/UserData");
 const transporter = require("../../config/connectEmail");
 const bcrypt = require("bcrypt");
 const registerData = async (req, res) => {
   let { firstName, lastName, email, password, confirmPassword, phoneNumber } =
     req.body;
-  // console.log(confirmPassword === password);
   try {
     //Hash password first
     const hash = async (password, saltRounds) => {
@@ -21,14 +20,16 @@ const registerData = async (req, res) => {
     const isPresentEmail = await User.find({ email: email });
     const isPresentPhoneNo = await User.find({ phoneNumber: phoneNumber });
     if (isPresentEmail.length != 0) {
-      console.log("Email ALready Present");
-      res.send({ msg: "Email ALready Present", status: "Fail" });
+      // console.log("Email ALready Present");
+      res.status(400).send({ msg: "Email ALready Present", status: "Fail" });
     } else if (isPresentPhoneNo.length != 0) {
-      res.send({ msg: "Phone number Already Present", status: "Fail" });
-      console.log("Phone number Already Present");
+      res
+        .status(400)
+        .send({ msg: "Phone number Already Present", status: "Fail" });
+      // console.log("Phone number Already Present");
     } else if (confirmPassword != password) {
-      res.send({ msg: "Password dosen't match", status: "Fail" });
-      console.log("Password dosen't match");
+      res.status(400).send({ msg: "Password dosen't match", status: "Fail" });
+      // console.log("Password dosen't match");
     } else {
       const newUser = new User({
         firstName: firstName,

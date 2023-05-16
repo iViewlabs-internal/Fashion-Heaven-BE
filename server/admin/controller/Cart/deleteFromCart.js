@@ -1,4 +1,4 @@
-const Cart = require("../../modles/CartData");
+const Cart = require("../../models/CartData");
 const deleteItem = async (req, res) => {
   const SKU = req.body.SKU;
   try {

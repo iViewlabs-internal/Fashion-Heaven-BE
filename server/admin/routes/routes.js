@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const signup = require("../controller/Registeration/signUp");
 const passport = require("passport");
-const User = require("../modles/UserData");
+const User = require("../models/UserData");
 const forgetPass = require("../controller/Registeration/forgotPass");
 const newPass = require("../controller/Registeration/newPass");
 const registerData = require("../controller/Products/registerData");
@@ -75,5 +75,9 @@ router.get("/getProduct/:SKU", checkLogin.isAuthenticated, getBySKU.getProduct);
 router.post("/addToCart", checkLogin.isAuthenticated, addToCart.addProduct);
 router.get("/getCartItems", checkLogin.isAuthenticated, getCartItems.allItems);
 router.post("/updateCart", checkLogin.isAuthenticated, updateCart.update);
-router.post("/deleteCartItem", deleteFromCart.deleteItem);
+router.post(
+  "/deleteCartItem",
+  checkLogin.isAuthenticated,
+  deleteFromCart.deleteItem
+);
 module.exports = router;

@@ -1,4 +1,5 @@
 const Order = require("../../models/Order");
+const resources = require("../../config/resources");
 const filterUserOrders = async (req, res) => {
   const { filterMonth, filterYear } = req.body;
   const consumerID = req.session.passport.user;
@@ -13,7 +14,7 @@ const filterUserOrders = async (req, res) => {
         orderDate: { $lt: endDate, $gt: startDate },
       });
       res.status(200).send({
-        status: "success",
+        status: resources.status.success,
         message: "Your data is filtered successfully",
         data: Orderdata,
       });
@@ -30,19 +31,21 @@ const filterUserOrders = async (req, res) => {
         orderDate: { $lt: endDate, $gt: startDate },
       });
       res.status(200).send({
-        status: "success",
+        status: resources.status.success,
         message: "Your data is filtered successfully",
         data: Orderdata,
       });
     } else {
-      res
-        .status(400)
-        .send({ status: "fail", message: `The input is in the wrong format` });
+      res.status(400).send({
+        status: resources.status.fail,
+        message: `The input is in the wrong format`,
+      });
     }
   } catch (err) {
-    res
-      .status(500)
-      .send({ status: "fail", message: `An error has occured ${err}` });
+    res.status(500).send({
+      status: resources.status.fail,
+      message: resources.messages.error.generic(err),
+    });
   }
 };
 module.exports = { filterUserOrders };

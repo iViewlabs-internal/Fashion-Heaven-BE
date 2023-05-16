@@ -1,12 +1,6 @@
 const Order = require("../../models/Order");
 const Product = require("../../models/ProductData");
-const getOrderDate = (date) => {
-  const day = date.getDate().toString().padStart(2, "0"); // Get the day and pad with leading zero if necessary
-  const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Get the month (Note: Month starts from 0) and pad with leading zero if necessary
-  const year = date.getFullYear(); // Get the full year
-
-  return (formattedDate = `${day}/${month}/${year}`);
-};
+const resources = require("../../config/resources");
 const getUserOrders = async (req, res) => {
   const consumerID = req.session.passport.user;
   try {
@@ -25,14 +19,15 @@ const getUserOrders = async (req, res) => {
       allUserOrder.push(currObj);
     }
     res.status(200).send({
-      status: "success",
+      status: resources.status.success,
       message: `Here is all the orders by id ${consumerID}`,
       data: allUserOrder,
     });
   } catch (err) {
-    res
-      .status(500)
-      .send({ status: "fail", message: `An error has occures ${err}` });
+    res.status(500).send({
+      status: resources.status.fail,
+      message: resources.messages.error.generic(err),
+    });
   }
 };
 module.exports = { getUserOrders };
