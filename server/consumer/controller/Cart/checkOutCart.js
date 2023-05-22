@@ -26,7 +26,7 @@ const buyAll = async (req, res) => {
       }
     }
     if (isRemaining) {
-      res.send({
+      res.status(400).send({
         status: "fail",
         message: "Not all items are in stock try again",
         reamainingItem: reamainingItem,

@@ -60,7 +60,7 @@ app.get(
   }
 );
 const PORT = process.env.PORT || 9001;
-const docsURL = `http://localhost:8001/api-docs/`;
+const docsURL = `http://localhost:${PORT}/api-docs/`;
 const URL = process.env.MONGOURL;
 connectDB(URL);
 app.listen(PORT, () => {

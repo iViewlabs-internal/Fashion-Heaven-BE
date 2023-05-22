@@ -26,6 +26,11 @@ const cancelOrder = require("../controller/Order/cancelOrder");
 const filterOrders = require("../controller/Order/filterOrders");
 const checkOutCart = require("../controller/Cart/checkOutCart");
 const searchProduct = require("../controller/Products/searchProduct");
+const updateAddress = require("../controller/Profile/updateAddress");
+const addReview = require("../controller/Review/addReview");
+const getAllReview = require("../controller/Review/getAllReview");
+const deleteReview = require("../controller/Review/deleteReview");
+const updateReview = require("../controller/Review/updateReview");
 router.get("/", (req, res) => {
   res.status(201).send({
     status: "success",
@@ -78,6 +83,11 @@ router.post(
   checkLogin.isAuthenticated,
   updateDetailes.updateInfo
 );
+router.post(
+  "/updateAddress",
+  checkLogin.isAuthenticated,
+  updateAddress.updateProfile
+);
 //Product API
 router.get("/productFilter", checkLogin.isAuthenticated, productFilter.filter);
 router.get(
@@ -86,7 +96,7 @@ router.get(
   getFeedItems.getProduct
 );
 router.post("/getBySKU", checkLogin.isAuthenticated, getBySKU.getProduct);
-router.post(
+router.get(
   "/searchProduct/:keyword?",
   checkLogin.isAuthenticated,
   searchProduct.getItem
@@ -123,5 +133,26 @@ router.post(
   "/filterOrders",
   checkLogin.isAuthenticated,
   filterOrders.filterUserOrders
+);
+// Review API
+router.post(
+  "/addReview",
+  checkLogin.isAuthenticated,
+  addReview.addProductReview
+);
+router.post(
+  "/getReview",
+  checkLogin.isAuthenticated,
+  getAllReview.getProductReview
+);
+router.post(
+  "/deleteReview",
+  checkLogin.isAuthenticated,
+  deleteReview.deleteProductReview
+);
+router.post(
+  "/updateReview",
+  checkLogin.isAuthenticated,
+  updateReview.updateProductReview
 );
 module.exports = router;

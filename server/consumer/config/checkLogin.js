@@ -1,6 +1,5 @@
 const resources = require("./resources");
 const isAuthenticated = (req, res, next) => {
-  console.log(req.session, "Inside checkLogin");
   if (req.isAuthenticated()) {
     return next();
   }

@@ -5,7 +5,6 @@ const update = async (req, res) => {
   const { productID, size, quantity } = req.body;
   try {
     const product = await Product.findOne({ _id: productID });
-    console.log(product);
     if (quantity > product.quantity) {
       res.status(400).send({
         status: resources.status.fail,

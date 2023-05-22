@@ -19,8 +19,10 @@ tags:
     description: Operations about Products
   - name: Profile
     description: Operations about Profile
-
+  - name: Review
+    description: Operations that include reviews
 paths:
+  # Registeration
   /signup:
     post:
       tags:
@@ -33,7 +35,6 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/ConsumerRequest"
-        required: true
       responses:
         "200":
           description: Successful operation
@@ -89,10 +90,6 @@ paths:
               example:
                 message: "A server error has occurred"
                 status: "Fail"
-      security:
-        - petstore_auth:
-            - write:pets
-            - read:pets
   /forget:
     post:
       tags:
@@ -105,16 +102,15 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/ConsumerForgotRequest"
-        required: true
       responses:
         "200":
           description: Successful operation
           content:
             application/json:
               example:
-                message: "The link was sent to you email"
+                message: string
                 status: "success"
-                data: "LINK"
+                data: string
         "500":
           description: Internal sever error
           content:
@@ -142,12 +138,11 @@ paths:
       summary: Reset User Password
       description: Used by user when he wants to reset his password
       requestBody:
-        description: Used to add new user to the DB
+        description: This will help user to reset thier password
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/NewPasswordRequest"
-        required: true
       responses:
         "200":
           description: Successful operation
@@ -171,6 +166,7 @@ paths:
               example:
                 message: "A server error has occurred"
                 status: "Fail"
+  # Profile API
   /getUser:
     get:
       tags:
@@ -291,6 +287,7 @@ paths:
               example:
                 message: "A server error has occurred"
                 status: "Fail"
+  # Cart API
   /addToCart:
     post:
       tags:
@@ -337,6 +334,613 @@ paths:
               example:
                 message: "A server error has occurred"
                 status: "Fail"
+  /deleteCartItem:
+    post:
+      tags:
+        - Cart
+      summary: Add Address for user
+      description: User can add address
+      requestBody:
+        description: Enter the address
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/deleteCartItemRequest"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              example:
+                message: "Product in cart with Cart ID: cartItemID is Deleted"
+                status: "success"
+        "400":
+          description: Internal sever error
+          content:
+            application/json:
+              example:
+                message: "Resource not found"
+                status: "fail"
+        "500":
+          description: Internal sever error
+          content:
+            application/json:
+              example:
+                message: "A server error has occurred"
+                status: "fail"
+  /updateCart:
+    post:
+      tags:
+        - Cart
+      summary: Add Address for user
+      description: User can add address
+      requestBody:
+        description: Enter the address
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/updateCartRequest"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/updateCartResponse"
+        "400":
+          description: No stock remaining
+          content:
+            application/json:
+              example:
+                message: "Product out of stock. Remaining items product.quantity"
+                status: "fail"
+        "500":
+          description: Internal sever error
+          content:
+            application/json:
+              example:
+                message: "A server error has occurred"
+                status: "fail"
+  /checkOutCart:
+    post:
+      tags:
+        - Cart
+      summary: Add Address for user
+      description: User can add address
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/checkOutCartResponse"
+        "400":
+          description: No stock remaining
+          content:
+            application/json:
+              example:
+                message: "Product out of stock. Remaining items product.quantity"
+                status: "fail"
+        "500":
+          description: Internal sever error
+          content:
+            application/json:
+              example:
+                message: "A server error has occurred"
+                status: "fail"
+  # Order API
+  /addOrder:
+    post:
+      tags:
+        - Order
+      summary: Add Address for user
+      description: User can add address
+      requestBody:
+        description: Enter the address
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/addOrderRequest"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/addOrderRequestSchema"
+        "400":
+          description: The item is not avalaible
+          content:
+            application/json:
+              example:
+                message: "Product out of stock. Remaining items product.quantity"
+                status: "fail"
+
+        "500":
+          description: Internal sever error
+          content:
+            application/json:
+              example:
+                message: "A server error has occurred"
+                status: "Fail"
+  /updateOrder:
+    post:
+      tags:
+        - Order
+      summary: Add Address for user
+      description: User can add address
+      requestBody:
+        description: Enter the address
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/updateOrderRequest"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/addOrderRequestSchema"
+        "500":
+          description: Internal sever error
+          content:
+            application/json:
+              example:
+                message: "A server error has occurred"
+                status: "Fail"
+  /getAllOrders:
+    get:
+      tags:
+        - Order
+      summary: Add Address for user
+      description: User can add address
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getAllOrdersResponse"
+        "500":
+          description: Internal sever error
+          content:
+            application/json:
+              example:
+                message: "A server error has occurred"
+                status: "Fail"
+  /getOrderByID:
+    post:
+      tags:
+        - Order
+      summary: Add Address for user
+      description: User can add address
+      requestBody:
+        description: Enter the address
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                orderID:
+                  type: string
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getOrderByIDResponse"
+        "500":
+          description: Internal sever error
+          content:
+            application/json:
+              example:
+                message: "A server error has occurred"
+                status: "Fail"
+  /cancelOrder:
+    post:
+      tags:
+        - Order
+      summary: Add Address for user
+      description: User can add address
+      requestBody:
+        description: Enter the address
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                orderID:
+                  type: string
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              example:
+                message: "Product in cart with Cart ID: cartItemID is Deleted"
+                status: "success"
+        "500":
+          description: Internal sever error
+          content:
+            application/json:
+              example:
+                message: "A server error has occurred"
+                status: "Fail"
+  /filterOrders:
+    post:
+      tags:
+        - Order
+      summary: Add Address for user
+      description: User can add address
+      requestBody:
+        description: Enter the address
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                orderID:
+                  type: string
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              example:
+                message: "Product in cart with Cart ID: cartItemID is Deleted"
+                status: "success"
+        "500":
+          description: Internal sever error
+          content:
+            application/json:
+              example:
+                message: "A server error has occurred"
+                status: "Fail"
+  # Review API
+  /addReview:
+    post:
+      tags:
+        - Review
+      summary: Add Review for Product
+      description: User can add Review to the product
+      requestBody:
+        description: Enter the detailes
+        content:
+          application/json:
+            schema:
+              type: object
+            example:
+              productID: "f021mqdnj131ndw22"
+              reviewDescription: "Hello"
+              rating: 6.7
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: "success"
+                message: "Resource created successfully."
+        "400":
+          description: The item is not avalaible
+          content:
+            application/json:
+              example:
+                message: "Bad request you haven't ordered this product"
+                status: "fail"
+
+        "500":
+          description: Internal sever error
+          content:
+            application/json:
+              example:
+                message: "A server error has occurred"
+                status: "Fail"
+  /deleteReview:
+    post:
+      tags:
+        - Review
+      summary: Delete Review for Product
+      description: User can delete Review to the product
+      requestBody:
+        description: Enter the detailes
+        content:
+          application/json:
+            schema:
+              type: object
+            example:
+              reviewID: "f021mqdnj131ndw22"
+              productID: "ghsqenion123wu78"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: "success"
+                message: "Resource deleted successfully."
+        "400":
+          description: The item is not avalaible
+          content:
+            application/json:
+              example:
+                message: "This review ID is incorrect"
+                status: "fail"
+
+        "500":
+          description: Internal sever error
+          content:
+            application/json:
+              example:
+                message: "A server error has occurred"
+                status: "Fail"
+  /updateReview:
+    post:
+      tags:
+        - Review
+      summary: Update Review for Product
+      description: User can update Review to the product
+      requestBody:
+        description: Enter the detailes
+        content:
+          application/json:
+            schema:
+              type: object
+            example:
+              reviewID: "f021mqdnj131ndw22"
+              productID: "ghsqenion123wu78"
+              reviewDescription: "This is the updated review"
+              rating: 7.1
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: "success"
+                message: "Resource updated successfully."
+        "400":
+          description: The item is not avalaible
+          content:
+            application/json:
+              example:
+                message: "This review ID is incorrect"
+                status: "fail"
+
+        "500":
+          description: Internal sever error
+          content:
+            application/json:
+              example:
+                message: "A server error has occurred"
+                status: "Fail"
+  /getReview:
+    post:
+      tags:
+        - Review
+      summary: Get All Review for Product
+      description: You can get Review to the product
+      requestBody:
+        description: Enter the detailes
+        content:
+          application/json:
+            schema:
+              type: object
+            example:
+              productID: "f021mqdnj131ndw22"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/getReviewResponse"
+        "400":
+          description: The item is not avalaible
+          content:
+            application/json:
+              example:
+                message: "This product dosen't exits"
+                status: "fail"
+
+        "500":
+          description: Internal sever error
+          content:
+            application/json:
+              example:
+                message: "A server error has occurred"
+                status: "Fail"
+  # Product Review
+  /getBySKU:
+    post:
+      tags:
+        - Product
+      summary: Get the product by SKU
+      description: You can get all the detailes by SKU
+      requestBody:
+        description: Enter the detailes
+        content:
+          application/json:
+            schema:
+              type: object
+            example:
+              SKU: "17625"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/getBySKUResponse"
+        "400":
+          description: The item is not avalaible
+          content:
+            application/json:
+              example:
+                message: "Resource not found"
+                status: "fail"
+
+        "500":
+          description: Internal sever error
+          content:
+            application/json:
+              example:
+                message: "A server error has occurred"
+                status: "Fail"
+  /feedProducts/page/limit:
+    get:
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: Number of items per page
+          schema:
+            type: integer
+      tags:
+        - Product
+      summary: Get Feed Porduct
+      description: Try to get all the product in the feed
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getByProductResponse"
+        "400":
+          description: The item is not avalaible
+          content:
+            application/json:
+              example:
+                message: "Unauthorized access."
+                status: "fail"
+        "500":
+          description: Internal sever error
+          content:
+            application/json:
+              example:
+                message: "A server error has occurred"
+                status: "Fail"
+  /searchProduct/keyword:
+    get:
+      parameters:
+        - name: keyword
+          in: query
+          description: Keyword to
+          schema:
+            type: integer
+      tags:
+        - Product
+      summary: Get all the product with keyboard
+      description: Try to get all the product in the feed
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        SKU:
+                          type: string
+                        name:
+                          type: string
+                        price:
+                          type: number
+                        image:
+                          type: string
+                      required:
+                        - SKU
+                        - name
+                        - price
+                        - image
+                  message:
+                    type: string
+        "400":
+          description: The item is not avalaible
+          content:
+            application/json:
+              example:
+                message: "Unauthorized access."
+                status: "fail"
+        "500":
+          description: Internal sever error
+          content:
+            application/json:
+              example:
+                message: "A server error has occurred"
+                status: "Fail"
+  /productFilter:
+    get:
+      parameters:
+        - name: audience
+          in: query
+          description: Page number
+          schema:
+            type: integer
+        - name: category
+          in: query
+          description: Number of items per page
+          schema:
+            type: integer
+        - name: minPrice
+          in: query
+          description: Page number
+          schema:
+            type: integer
+        - name: maxPrice
+          in: query
+          description: Number of items per page
+          schema:
+            type: integer
+      tags:
+        - Product
+      summary: Get all the product by adding product filter
+      description: Try to get all the product in the feed
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/filterProductResponse"
+        "400":
+          description: The item is not avalaible
+          content:
+            application/json:
+              example:
+                message: "Unauthorized access."
+                status: "fail"
+        "500":
+          description: Internal sever error
+          content:
+            application/json:
+              example:
+                message: "A server error has occurred"
+                status: "Fail"
 components:
   schemas:
     AddressSchema:
@@ -354,28 +958,78 @@ components:
           type: string
         addressLine2:
           type: string
+    updateCartSchema:
+      type: object
+      properties:
+        acknowledged:
+          type: string
+        modifiedCount:
+          type: integer
+        upsertedId:
+          type: string
+        upsertedCount:
+          type: integer
+        matchedCount:
+          type: integer
+    checkOutCartSchema:
+      type: object
+      properties:
+        productID:
+          type: string
+        orderDate:
+          type: string
+        orderStatus:
+          type: string
+        consumerID:
+          type: string
+        size:
+          type: string
+        quantity:
+          type: integer
+        color:
+          type: string
+    addOrderRequestSchema:
+      type: object
+      properties:
+        productID:
+          type: string
+        orderDate:
+          type: string
+        size:
+          type: string
+        quantity:
+          type: integer
+        color:
+          type: string
+    # Consumer API Schema
     ConsumerResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        data:
+          $ref: "#/components/schemas/ConsumerResponseObj"
+        status:
+          type: string
+    ConsumerResponseObj:
       type: object
       properties:
         firstName:
           type: string
-          example: Pink
         lastName:
           type: string
-          example: Sharma
         email:
           type: string
-          example: Pink123@gmail.com
         password:
           type: string
         phoneNumber:
-          type: integer
-          format: int64
-          example: 987456356
-        schema:
+          type: string
+        _id:
+          type: string
+        address:
           type: array
           items:
-            $ref: "#/components/schemas/AddressSchema"
+            type: object
     ConsumerRequest:
       type: object
       properties:
@@ -419,72 +1073,6 @@ components:
         confirmPassword:
           type: string
           example: password
-    Order:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          example: 10
-        petId:
-          type: integer
-          format: int64
-          example: 198772
-        quantity:
-          type: integer
-          format: int32
-          example: 7
-        shipDate:
-          type: string
-          format: date-time
-        status:
-          type: string
-          description: Order Status
-          example: approved
-          enum:
-            - placed
-            - approved
-            - delivered
-        complete:
-          type: boolean
-      xml:
-        name: order
-    Customer:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          example: 100000
-        username:
-          type: string
-          example: fehguy
-        address:
-          type: array
-          xml:
-            name: addresses
-            wrapped: true
-          items:
-            $ref: "#/components/schemas/Address"
-      xml:
-        name: customer
-    Address:
-      type: object
-      properties:
-        street:
-          type: string
-          example: 437 Lytton
-        city:
-          type: string
-          example: Palo Alto
-        state:
-          type: string
-          example: CA
-        zip:
-          type: string
-          example: "94301"
-      xml:
-        name: address
     deleteAddressRequest:
       type: object
       properties:
@@ -509,6 +1097,7 @@ components:
         age:
           type: string
           example: "32"
+    # Cart API Schema
     addToCartRequest:
       type: object
       properties:
@@ -555,138 +1144,225 @@ components:
         subTotal:
           type: integer
           example: "134"
-    Category:
+    deleteCartItemRequest:
       type: object
       properties:
-        id:
+        cartItemID:
+          type: string
+          example: "Cart ID"
+    updateCartRequest:
+      type: object
+      properties:
+        productID:
+          type: string
+          example: "131u11f1f6bcva"
+        size:
+          type: string
+          example: "XL"
+        quantity:
           type: integer
-          format: int64
           example: 1
-        name:
-          type: string
-          example: Dogs
-      xml:
-        name: category
-    User:
+    updateCartResponse:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
-          example: 10
-        username:
-          type: string
-          example: theUser
-        firstName:
-          type: string
-          example: John
-        lastName:
-          type: string
-          example: James
-        email:
-          type: string
-          example: john@email.com
-        password:
-          type: string
-          example: "12345"
-        phone:
-          type: string
-          example: "12345"
-        userStatus:
-          type: integer
-          description: User Status
-          format: int32
-          example: 1
-      xml:
-        name: user
-    Tag:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-      xml:
-        name: tag
-    Pet:
-      required:
-        - name
-        - photoUrls
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          example: 10
-        name:
-          type: string
-          example: doggie
-        category:
-          $ref: "#/components/schemas/Category"
-        photoUrls:
-          type: array
-          xml:
-            wrapped: true
-          items:
-            type: string
-            xml:
-              name: photoUrl
-        tags:
-          type: array
-          xml:
-            wrapped: true
-          items:
-            $ref: "#/components/schemas/Tag"
         status:
           type: string
-          description: pet status in the store
-          enum:
-            - available
-            - pending
-            - sold
-      xml:
-        name: pet
-    ApiResponse:
+          example: "success"
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/updateCartSchema"
+        message:
+          type: string
+    checkOutCartResponse:
       type: object
       properties:
-        code:
+        status:
+          type: string
+          example: "success"
+        orderedItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/checkOutCartSchema"
+        message:
+          type: string
+    # Order API schema
+    addOrderRequest:
+      type: object
+      properties:
+        productID:
+          type: string
+        orderDate:
+          type: string
+        size:
+          type: string
+        quantity:
           type: integer
-          format: int32
-        type:
+        color:
+          type: string
+    updateOrderRequest:
+      type: object
+      properties:
+        orderID:
+          type: string
+        orderStatus:
+          type: string
+    getAllOrdersResponse:
+      type: array
+      items:
+        type: object
+        properties:
+          orderID:
+            type: string
+          name:
+            type: string
+          orderDate:
+            type: string
+          image:
+            type: string
+          orderStatus:
+            type: string
+    getOrderByIDResponse:
+      type: object
+      properties:
+        orderDate:
+          type: string
+        orderStatus:
+          type: string
+        consumeId:
+          type: string
+        quantity:
+          type: integer
+        size:
+          type: string
+        color:
+          type: string
+        productData:
+          type: string
+    # Review
+    getReviewResponse:
+      type: object
+      properties:
+        rating:
+          type: string
+        reviewDescription:
+          type: string
+        consumerID:
+          type: string
+        _id:
+          type: string
+    # Product
+    getBySKUResponse:
+      type: object
+      properties:
+        status:
           type: string
         message:
           type: string
-      xml:
-        name: "##default"
-  requestBodies:
-    Pet:
-      description: Pet object that needs to be added to the store
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/Pet"
-        application/xml:
-          schema:
-            $ref: "#/components/schemas/Pet"
-    UserArray:
-      description: List of user object
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: "#/components/schemas/User"
-  securitySchemes:
-    petstore_auth:
-      type: oauth2
-      flows:
-        implicit:
-          authorizationUrl: https://petstore3.swagger.io/oauth/authorize
-          scopes:
-            write:pets: modify pets in your account
-            read:pets: read your pets
-    api_key:
-      type: apiKey
-      name: api_key
-      in: header
+        data:
+          type: object
+          properties:
+            _id:
+              type: string
+            name:
+              type: string
+            price:
+              type: integer
+            size:
+              type: array
+              items:
+                type: string
+            SKU:
+              type: string
+            productDetails:
+              type: string
+            image:
+              type: string
+            quantity:
+              type: integer
+            color:
+              type: array
+              items:
+                type: string
+            audience:
+              type: string
+            adminId:
+              type: string
+            date:
+              type: string
+            reviews:
+              type: array
+              items:
+                $ref: "#/components/schemas/getReviewResponse"
+            __v:
+              type: integer
+    getByProductResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            next:
+              type: object
+              properties:
+                page:
+                  type: integer
+                limit:
+                  type: integer
+            previous:
+              type: object
+              properties:
+                page:
+                  type: integer
+                limit:
+                  type: integer
+            result:
+              type: array
+              items:
+                type: object
+                properties:
+                  SKU:
+                    type: string
+                  name:
+                    type: string
+                  price:
+                    type: number
+                  image:
+                    type: string
+            totalData:
+              type: integer
+    ResourceItemFilterProduct:
+      type: object
+      properties:
+        SKU:
+          type: string
+        name:
+          type: string
+        image:
+          type: string
+        price:
+          type: number
+      required:
+        - SKU
+        - name
+        - image
+        - price
+    filterProductResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResourceItemFilterProduct"
+      required:
+        - status
+        - message
+        - data

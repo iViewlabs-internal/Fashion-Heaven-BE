@@ -9,16 +9,16 @@ function shuffleArray(array) {
   return array;
 }
 const getProduct = async (req, res) => {
-  const page = parseInt(req.query.page);
-  const limit = parseInt(req.query.limit);
   try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 4;
     const documentCnt = await Product.countDocuments();
     let paginationRes = await pagination.paginatedResults(Product, page, limit);
     paginationRes.result = shuffleArray(paginationRes.result);
     paginationRes.totalData = documentCnt;
-    res.send({
+    res.status(200).send({
       status: resources.status.success,
-      message: "Here is the required data",
+      message: resources.messages.success.fetched,
       data: paginationRes,
     });
   } catch (err) {

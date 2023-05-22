@@ -53,9 +53,9 @@ const changePassword = async (req, res) => {
       // console.log(result);
     }
     if (errorFlag === true) {
-      res.status(500).send({
+      res.status(400).send({
         status: resources.status.fail,
-        message: resources.messages.error.generic(err),
+        message: errorMessage,
       });
     } else {
       res.status(200).send({
