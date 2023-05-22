@@ -458,5 +458,5 @@ These are API's that will the user to give review of the product they ordered
 
 ## Feedback
 
-If you have any feedback, please reach out to us at [GitHub](https://github.com/TanishiViewLabs@)
+If you have any feedback, please reach out to us at [GitHub](https://github.com/TanishiViewLabs)
 
