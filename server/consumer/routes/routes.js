@@ -11,7 +11,9 @@ const addToCart = require("../controller/Cart/addToCart");
 const getCartItems = require("../controller/Cart/getCartItems");
 const updateCart = require("../controller/Cart/updateCart");
 const deleteFromCart = require("../controller/Cart/deleteFromCart");
-const getFeedItems = require("../controller/Products/getFeedProducts");
+const getFeedItems = require("../controller/Products/getFeedProductsRadnom");
+const getFeedItemsPrice = require("../controller/Products/getFeedProductsPrice");
+const getFeedItemsRating = require("../controller/Products/getFeedProductsRating");
 const getBySKU = require("../controller/Products/getProductSKU");
 const getUserProfile = require("../controller/Profile/getUserProfile");
 const addAddress = require("../controller/Profile/addAddress");
@@ -61,7 +63,9 @@ router.get("/success", async (req, res) => {
   }
 });
 router.get("/failure", (req, res) => {
-  res.status(403).send({ status: "fail" });
+  res
+    .status(403)
+    .send({ status: "fail", message: "Please recheck your creadentials" });
 });
 router.post("/forget", forgetPass.resetPass);
 router.post("/reset/:token/:id", newPass.changePassword);
@@ -94,6 +98,16 @@ router.get(
   "/feedProducts/:page?/:limit?",
   checkLogin.isAuthenticated,
   getFeedItems.getProduct
+);
+router.get(
+  "/feedProductsPrice/:page?/:limit?",
+  checkLogin.isAuthenticated,
+  getFeedItemsPrice.getProduct
+);
+router.get(
+  "/feedProductsRating/:page?/:limit?",
+  checkLogin.isAuthenticated,
+  getFeedItemsRating.getProduct
 );
 router.post("/getBySKU", checkLogin.isAuthenticated, getBySKU.getProduct);
 router.get(

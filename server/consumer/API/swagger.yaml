@@ -292,10 +292,10 @@ paths:
     post:
       tags:
         - Cart
-      summary: Add Address for user
-      description: User can add address
+      summary: Add item to cart
+      description: Help user to put items in cart
       requestBody:
-        description: Enter the address
+        description: Enter the detailes
         content:
           application/json:
             schema:
@@ -318,8 +318,8 @@ paths:
     get:
       tags:
         - Cart
-      summary: Add Address for user
-      description: User can add address
+      summary: Get all items of the cart
+      description: User can get all the items of cart
       responses:
         "201":
           description: Created
@@ -338,10 +338,10 @@ paths:
     post:
       tags:
         - Cart
-      summary: Add Address for user
-      description: User can add address
+      summary: Delete Cart Item
+      description: User can Delete Cart Item
       requestBody:
-        description: Enter the address
+        description: Enter the details
         content:
           application/json:
             schema:
@@ -372,10 +372,10 @@ paths:
     post:
       tags:
         - Cart
-      summary: Add Address for user
-      description: User can add address
+      summary: Update Cart for user
+      description: User can update cart
       requestBody:
-        description: Enter the address
+        description: Enter the details
         content:
           application/json:
             schema:
@@ -405,8 +405,8 @@ paths:
     post:
       tags:
         - Cart
-      summary: Add Address for user
-      description: User can add address
+      summary: Check Out Cart for user
+      description: User can check out all items in the cart
       responses:
         "201":
           description: Created
@@ -581,7 +581,9 @@ paths:
             schema:
               type: object
               properties:
-                orderID:
+                filterMonth:
+                  type: string
+                filterYear:
                   type: string
       responses:
         "201":

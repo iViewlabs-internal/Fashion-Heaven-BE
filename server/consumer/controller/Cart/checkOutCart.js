@@ -3,8 +3,8 @@ const Order = require("../../models/Order");
 const Product = require("../../models/ProductData");
 const resources = require("../../config/resources");
 const buyAll = async (req, res) => {
-  const consumerID = req.session.passport.user;
   try {
+    const consumerID = req.session.passport.user;
     const consumerCartOrders = await ConsumerCart.find({
       consumerID: consumerID,
     });

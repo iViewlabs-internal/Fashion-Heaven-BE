@@ -2,8 +2,8 @@ const ConsumerCart = require("../../models/ConsumerCart");
 const Product = require("../../models/ProductData");
 const resources = require("../../config/resources");
 const allItems = async (req, res) => {
-  const consumerID = req.session.passport.user;
   try {
+    const consumerID = req.session.passport.user;
     const cartItem = await ConsumerCart.find({ consumerID: consumerID });
     let allCartItems = [];
     let subTotalCost = 0;

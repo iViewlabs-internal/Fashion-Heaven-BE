@@ -21,6 +21,7 @@ const updateProfile = async (req, res) => {
     };
     const consumerID = req.session.passport.user;
     const consumerdata = await Consumer.findOne({ _id: consumerID });
+    let flag = false;
     const consumerAddress = consumerdata.address;
     for (let i = 0; i < consumerAddress.length; i++) {
       if (addressId == consumerAddress[i]._id) {
@@ -29,12 +30,20 @@ const updateProfile = async (req, res) => {
         consumerdata.address[i] = updatedAddress;
         consumerdata.save();
         console.log("Data Updated");
+        flag = true;
       }
     }
-    res.status(200).send({
-      status: resources.status.success,
-      message: resources.messages.success.updated,
-    });
+    if (flag) {
+      res.status(200).send({
+        status: resources.status.success,
+        message: resources.messages.success.updated,
+      });
+    } else {
+      res.status(400).send({
+        status: resources.status.fail,
+        message: resources.messages.error.notFound,
+      });
+    }
   } catch (err) {
     res.status(500).send({
       status: resources.status.fail,

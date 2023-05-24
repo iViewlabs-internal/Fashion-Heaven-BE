@@ -1,8 +1,8 @@
 const ConsumerCart = require("../../models/ConsumerCart");
 const resources = require("../../config/resources");
 const deleteItem = async (req, res) => {
-  const cartItemID = req.body.cartItemID;
   try {
+    const cartItemID = req.body.cartItemID;
     const cartItem = await ConsumerCart.findOne({ _id: cartItemID });
     if (cartItem != null) {
       const deleteProduct = await ConsumerCart.deleteOne({
