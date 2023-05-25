@@ -33,6 +33,7 @@ const addReview = require("../controller/Review/addReview");
 const getAllReview = require("../controller/Review/getAllReview");
 const deleteReview = require("../controller/Review/deleteReview");
 const updateReview = require("../controller/Review/updateReview");
+const getInvoice = require("../controller/Invoice/getInvoice");
 router.get("/", (req, res) => {
   res.status(201).send({
     status: "success",
@@ -168,5 +169,11 @@ router.post(
   "/updateReview",
   checkLogin.isAuthenticated,
   updateReview.updateProductReview
+);
+// Invoice
+router.get(
+  "/consumerInvoice/:orderID?",
+  checkLogin.isAuthenticated,
+  getInvoice.invoicePdf
 );
 module.exports = router;

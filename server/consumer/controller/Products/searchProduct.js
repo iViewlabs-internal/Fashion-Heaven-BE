@@ -3,6 +3,7 @@ const Product = require("../../models/ProductData");
 const getItem = async (req, res) => {
   try {
     const keyword = req.query.keyword;
+    // const
     const productSearchData = await Product.find({
       name: { $regex: keyword, $options: "i" },
     });

@@ -20,6 +20,15 @@ const resources = {
     success: "success",
     fail: "fail",
   },
+  companyDetails: {
+    name: "Fashion Heaven PVT LTD",
+    address: "G-6 Jyoti Plaza, Shyamal Cross Road, 132 Feet Ring Rd, Satellite",
+    zip: "380015",
+    state: "Gujarat ",
+    country: "India",
+    phone: "9825807060",
+    email: "FashiohHeaven@gmail.com",
+  },
 };
 
 module.exports = resources;
