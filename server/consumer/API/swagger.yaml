@@ -616,6 +616,7 @@ paths:
             example:
               productID: "f021mqdnj131ndw22"
               reviewDescription: "Hello"
+              orderID: "p0123m5qdnj131ndw22"
               rating: 6.7
       responses:
         "201":

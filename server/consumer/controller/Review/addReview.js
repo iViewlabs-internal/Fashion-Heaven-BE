@@ -5,18 +5,15 @@ const addProductReview = async (req, res) => {
   try {
     let errorStatusCode, errorSatusMessage;
     let errorFlag = true;
-    const { productID, reviewDescription, rating } = req.body;
+    const { productID, reviewDescription, orderID, rating } = req.body;
     const consumerID = req.session.passport.user;
-    const orderData = await Order.find({
-      productID: productID,
-      consumerID: consumerID,
-    });
-    if (orderData.length == 0) {
+    const orderData = await Order.findOne({ _id: orderID });
+    if (orderData == null) {
       errorFlag = false;
       errorSatusMessage = "Bad request you haven't ordered this product";
       errorStatusCode = 400;
     }
-    if (orderData.length != 0 && orderData[0].orderStatus != "Delivered") {
+    if (orderData != null && orderData.orderStatus != "Delivered") {
       errorFlag = false;
       errorSatusMessage =
         "You cannot write a review yet you need the product to be delivered";
