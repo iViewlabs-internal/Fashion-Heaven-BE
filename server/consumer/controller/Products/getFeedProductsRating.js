@@ -1,6 +1,7 @@
 const Product = require("../../models/ProductData");
-const pagination = require("../../middleware/reviewPagination");
+const pagination = require("../../helper/reviewPagination");
 const resources = require("../../config/resources");
+const ProductDataService = require("../../services/ProductDataServices");
 const customComparator = (a, b) => {
   return b.rating - a.rating;
 };
@@ -36,16 +37,26 @@ const getProduct = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 4;
-    const documentCnt = await Product.countDocuments();
-    let paginationRes = await pagination.paginatedResults(Product, page, limit);
-    paginationRes.result = sortArrayRating(paginationRes.result);
-    paginationRes.totalData = documentCnt;
-    // console.log(paginationRes);
-    res.status(200).send({
-      status: resources.status.success,
-      message: resources.messages.success.fetched,
-      data: paginationRes,
-    });
+    const documentCnt = await ProductDataService.countDocuments();
+    if (documentCnt.status == resources.status.fail) {
+      res.status(500).send({
+        status: resources.status.fail,
+        message: documentCnt.message,
+      });
+    } else {
+      let paginationRes = await pagination.paginatedResults(
+        Product,
+        page,
+        limit
+      );
+      paginationRes.result = sortArrayRating(paginationRes.result);
+      paginationRes.totalData = documentCnt;
+      res.status(200).send({
+        status: resources.status.success,
+        message: resources.messages.success.fetched,
+        data: paginationRes,
+      });
+    }
   } catch (err) {
     res.status(500).send({
       status: resources.status.fail,

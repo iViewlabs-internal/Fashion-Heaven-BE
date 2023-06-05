@@ -1,15 +1,15 @@
 const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema({
-  name: { type: String, require: true, minlegth: 2, maxlegth: 20 },
-  price: { type: Number, require: true },
+  name: { type: String, minlegth: 2, maxlegth: 20 },
+  price: { type: Number },
   size: {
     type: Array,
     items: {
       type: String,
     },
   },
-  SKU: { type: String, require: true },
+  SKU: { type: String },
   productDetails: {
     type: String,
     required: true,
@@ -22,18 +22,19 @@ const productSchema = new mongoose.Schema({
     {
       rating: { type: Number },
       reviewDescription: { type: String },
+      consumerID: { type: String },
     },
   ],
-  quantity: { type: Number, require: true },
-  category: { type: String, require: true },
+  quantity: { type: Number },
+  category: { type: String },
   color: {
     type: Array,
     items: {
       type: String,
     },
   },
-  audience: { type: String, require: true },
-  adminId: { type: String, require: true },
+  audience: { type: String },
+  adminId: { type: String },
   date: { type: String },
 });
 const Product = mongoose.model("Product", productSchema);

@@ -1,4 +1,4 @@
-const resources = require("./resources");
+const resources = require("../config/resources");
 const isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();

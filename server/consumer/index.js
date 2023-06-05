@@ -24,7 +24,7 @@ app.use(
     secret: "keyboard cat",
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false }, // Use secure: false for testing over HTTP
+    cookie: { secure: false },
   })
 );
 app.use(cors());
@@ -60,7 +60,7 @@ app.get(
   }
 );
 const PORT = process.env.PORT || 9001;
-const docsURL = `http://localhost:${PORT}/api-docs/`;
+const docsURL = process.env.DOCSURL;
 const URL = process.env.MONGOURL;
 connectDB(URL);
 app.listen(PORT, () => {

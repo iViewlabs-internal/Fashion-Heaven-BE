@@ -1,11 +1,12 @@
-const Consumer = require("../../models/Consumer");
 const transporter = require("../../config/connectEmail");
 const jwt = require("jsonwebtoken");
 const resources = require("../../config/resources");
+const ConsumerService = require("../../services/ConsumerService");
 const resetPass = async (req, res) => {
   const { email } = req.body;
   try {
-    const isPresentEmail = await Consumer.find({ email: email });
+    const PresentEmailRequest = await ConsumerService.findDataByEmail(email);
+    const isPresentEmail = PresentEmailRequest.data;
     if (isPresentEmail.length == 0) {
       res.send({ status: "fail", message: "This email dosen't exists" });
     } else {

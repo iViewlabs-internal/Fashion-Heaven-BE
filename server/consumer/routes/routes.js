@@ -6,7 +6,7 @@ const Consumer = require("../models/Consumer");
 const forgetPass = require("../controller/Registeration/forgotPass");
 const newPass = require("../controller/Registeration/newPass");
 const productFilter = require("../controller/Products/productFilter");
-const checkLogin = require("../config/checkLogin");
+const checkLogin = require("../middleware/checkLogin");
 const addToCart = require("../controller/Cart/addToCart");
 const getCartItems = require("../controller/Cart/getCartItems");
 const updateCart = require("../controller/Cart/updateCart");
@@ -30,10 +30,9 @@ const checkOutCart = require("../controller/Cart/checkOutCart");
 const searchProduct = require("../controller/Products/searchProduct");
 const updateAddress = require("../controller/Profile/updateAddress");
 const addReview = require("../controller/Review/addReview");
-const getAllReview = require("../controller/Review/getAllReview");
 const deleteReview = require("../controller/Review/deleteReview");
-const updateReview = require("../controller/Review/updateReview");
 const getInvoice = require("../controller/Invoice/getInvoice");
+const stripeBuyOne = require("../controller/Payment/Stripe/singleOrder");
 router.get("/", (req, res) => {
   res.status(201).send({
     status: "success",
@@ -156,24 +155,20 @@ router.post(
   addReview.addProductReview
 );
 router.post(
-  "/getReview",
-  checkLogin.isAuthenticated,
-  getAllReview.getProductReview
-);
-router.post(
   "/deleteReview",
   checkLogin.isAuthenticated,
   deleteReview.deleteProductReview
-);
-router.post(
-  "/updateReview",
-  checkLogin.isAuthenticated,
-  updateReview.updateProductReview
 );
 // Invoice
 router.get(
   "/consumerInvoice/:orderID?",
   checkLogin.isAuthenticated,
   getInvoice.invoicePdf
+);
+// Payment
+router.post(
+  "/stripeOneOrder",
+  checkLogin.isAuthenticated,
+  stripeBuyOne.userOrder
 );
 module.exports = router;

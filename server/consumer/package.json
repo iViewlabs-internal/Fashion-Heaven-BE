@@ -30,6 +30,7 @@
     "passport": "^0.6.0",
     "passport-google-oauth2": "^0.2.0",
     "passport-local": "^1.0.0",
+    "stripe": "^12.7.0",
     "swagger": "^0.0.1",
     "swagger-ui-express": "^4.6.3",
     "yaml": "^2.2.2",

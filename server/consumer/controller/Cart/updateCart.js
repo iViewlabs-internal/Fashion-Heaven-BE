@@ -1,17 +1,19 @@
-const ConsumerCart = require("../../models/ConsumerCart");
 const Product = require("../../models/ProductData");
 const resources = require("../../config/resources");
+const ConsumerCartServices = require("../../services/ConsumerCartServices");
+const ProductDataServices = require("../../services/ProductDataServices");
+
 const update = async (req, res) => {
   try {
     const { productID, size, quantity } = req.body;
-    const productData = await Product.findOne({ _id: productID });
+    const productData = await ProductDataServices.getProductByID(productID);
     if (productData == null) {
       res.status(400).send({
         status: resources.status.fail,
         message: resources.messages.error.notFound,
       });
     } else {
-      const product = await Product.findOne({ _id: productID });
+      const product = await ProductDataServices.getProductByID(productID);
       if (quantity > product.quantity) {
         res.status(400).send({
           status: resources.status.fail,
@@ -19,9 +21,10 @@ const update = async (req, res) => {
         });
       } else {
         try {
-          const updateData = await ConsumerCart.updateOne(
-            { productID: productID },
-            { $set: { size: size, quantity: quantity } }
+          const updateData = await ConsumerCartServices.updateCartSizeQuantity(
+            productID,
+            size,
+            quantity
           );
           res.status(200).send({
             status: resources.status.success,

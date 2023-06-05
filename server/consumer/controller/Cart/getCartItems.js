@@ -1,44 +1,58 @@
-const ConsumerCart = require("../../models/ConsumerCart");
-const Product = require("../../models/ProductData");
-const resources = require("../../config/resources");
+// Importing all models
+const resources = require("../../config/resources"); // Importing the resources
+const ConsumerCartServices = require("../../services/ConsumerCartServices");
+const ProductDataServices = require("../../services/ProductDataServices");
 const allItems = async (req, res) => {
   try {
-    const consumerID = req.session.passport.user;
-    const cartItem = await ConsumerCart.find({ consumerID: consumerID });
-    let allCartItems = [];
-    let subTotalCost = 0;
-    for (let i = 0; i < cartItem.length; i++) {
-      const productID = cartItem[i].productID;
-      const currProductItem = await Product.find({
-        _id: productID,
+    const consumerID = req.session.passport.user; // Extracting the consumer ID from the session
+    const cartItem = await ConsumerCartServices.getProductIDsByConsumerID(
+      consumerID
+    );
+    if (cartItem.status == resources.status.fail) {
+      res.status(500).send({
+        status: resources.status.fail,
+        message: cartItem.message,
       });
-      let inStock = true;
-      if (currProductItem[0].quantity < 1) {
-        inStock = false;
+    } else {
+      let allCartItems = []; // Array to store all cart items
+      let subTotalCost = 0; // Variable to calculate the subtotal cost of all cart items
+      // Get All the products
+      const allProductData =
+        await ProductDataServices.getMultipleProductByIdSize(cartItem.data);
+      if (allProductData.status == resources.status.fail) {
+        res.status(500).send({
+          status: resources.status.fail,
+          message: cartItem.message,
+        });
+      } else {
+        // Looping through each cart item
+        for (const currProduct of allProductData.data) {
+          let tempItem = {
+            productID: currProduct.productData._id,
+            name: currProduct.productData.name,
+            price: currProduct.productData.price,
+            image: currProduct.productData.image,
+            size: currProduct.size,
+          };
+          allCartItems.push(tempItem);
+          subTotalCost += currProduct.productData.price;
+        }
+        // Sending a success response with the cart item data and subtotal cost
+        res.status(200).send({
+          status: resources.status.success,
+          productData: allCartItems,
+          message: resources.messages.success.fetched,
+          subTotal: subTotalCost,
+        });
       }
-      console.log(currProductItem);
-      let tempItem = {
-        productID: productID,
-        name: currProductItem[0].name,
-        price: currProductItem[0].price,
-        image: currProductItem[0].image,
-        inStock: inStock,
-        size: cartItem[i].size,
-      };
-      allCartItems.push(tempItem);
-      subTotalCost += currProductItem[0].price;
     }
-    res.status(200).send({
-      status: resources.status.success,
-      productData: allCartItems,
-      message: resources.messages.success.fetched,
-      subTotal: subTotalCost,
-    });
   } catch (err) {
+    // Handling any errors that occur during the process
     res.status(500).send({
       status: resources.status.fail,
       message: resources.messages.error.generic(err),
     });
   }
 };
+
 module.exports = { allItems };

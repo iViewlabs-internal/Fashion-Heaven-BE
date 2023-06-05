@@ -29,6 +29,13 @@ const resources = {
     phone: "9825807060",
     email: "FashiohHeaven@gmail.com",
   },
+  orderPhases: {
+    first: "Order Confirmed",
+    second: "Transported",
+    third: "Dispatched",
+    fourth: "Delivered",
+    cancel: "Cancelled",
+  },
 };
 
 module.exports = resources;

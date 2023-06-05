@@ -1,5 +1,6 @@
 const Consumer = require("../../models/Consumer");
 const resources = require("../../config/resources");
+const ConsumerService = require("../../services/ConsumerService");
 const updateProfile = async (req, res) => {
   try {
     const {
@@ -20,29 +21,28 @@ const updateProfile = async (req, res) => {
       addressLine2: addressLine2,
     };
     const consumerID = req.session.passport.user;
-    const consumerdata = await Consumer.findOne({ _id: consumerID });
-    let flag = false;
-    const consumerAddress = consumerdata.address;
-    for (let i = 0; i < consumerAddress.length; i++) {
-      if (addressId == consumerAddress[i]._id) {
-        console.log(consumerdata.address[i], "Previous Data");
-        console.log(updatedAddress, "newData");
-        consumerdata.address[i] = updatedAddress;
-        consumerdata.save();
-        console.log("Data Updated");
-        flag = true;
-      }
-    }
-    if (flag) {
-      res.status(200).send({
-        status: resources.status.success,
-        message: resources.messages.success.updated,
+    const updatedData = await ConsumerService.updateAddressByID(
+      consumerID,
+      updatedAddress,
+      addressId
+    );
+    if (updatedData.status == resources.status.fail) {
+      res.status(500).send({
+        status: resources.status.fail,
+        message: updatedData.message,
       });
     } else {
-      res.status(400).send({
-        status: resources.status.fail,
-        message: resources.messages.error.notFound,
-      });
+      if (updatedData.isPresent) {
+        res.status(200).send({
+          status: resources.status.success,
+          message: resources.messages.success.updated,
+        });
+      } else {
+        res.status(400).send({
+          status: resources.status.fail,
+          message: resources.messages.error.notFound,
+        });
+      }
     }
   } catch (err) {
     res.status(500).send({

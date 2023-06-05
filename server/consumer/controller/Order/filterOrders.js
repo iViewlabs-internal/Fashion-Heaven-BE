@@ -1,23 +1,35 @@
 const Order = require("../../models/Order");
 const resources = require("../../config/resources");
+const OrderService = require("../../services/OrderServices");
 const filterUserOrders = async (req, res) => {
-  const { filterMonth, filterYear } = req.body;
-  const consumerID = req.session.passport.user;
   try {
+    const { filterMonth, filterYear } = req.body;
+    const consumerID = req.session.passport.user;
     let currDate = new Date();
     if (filterMonth.length == 0) {
       currDate.setFullYear(currDate.getFullYear() - filterYear);
       const startDate = new Date(`${currDate.getFullYear()}-01-01`);
       const endDate = new Date(`${currDate.getFullYear()}-12-31`);
-      const Orderdata = await Order.find({
+      const searchObj = {
         consumerID: consumerID,
         orderDate: { $lt: endDate, $gt: startDate },
-      });
-      res.status(200).send({
-        status: resources.status.success,
-        message: "Your data is filtered successfully",
-        data: Orderdata,
-      });
+      };
+      const OrderdataRequest = await OrderService.findOrderByIDandObject(
+        searchObj
+      );
+      if (OrderdataRequest.status == resources.status.fail) {
+        res.status(500).send({
+          status: resources.status.fail,
+          message: OrderdataRequest.message,
+        });
+      } else {
+        const Orderdata = OrderdataRequest.data;
+        res.status(200).send({
+          status: resources.status.success,
+          message: "Your data is filtered successfully",
+          data: Orderdata,
+        });
+      }
     } else if (filterYear.length == 0) {
       const startDate = new Date();
       const endDate = new Date();
@@ -26,15 +38,26 @@ const filterUserOrders = async (req, res) => {
       } else {
         startDate.setMonth(startDate.getMonth() - 6);
       }
-      const Orderdata = await Order.find({
+      const searchObj = {
         consumerID: consumerID,
         orderDate: { $lt: endDate, $gt: startDate },
-      });
-      res.status(200).send({
-        status: resources.status.success,
-        message: "Your data is filtered successfully",
-        data: Orderdata,
-      });
+      };
+      const OrderdataRequest = await OrderService.findOrderByIDandObject(
+        searchObj
+      );
+      if (OrderdataRequest.status == resources.status.fail) {
+        res.status(500).send({
+          status: resources.status.fail,
+          message: OrderdataRequest.message,
+        });
+      } else {
+        const Orderdata = OrderdataRequest.data;
+        res.status(200).send({
+          status: resources.status.success,
+          message: "Your data is filtered successfully",
+          data: Orderdata,
+        });
+      }
     } else {
       res.status(400).send({
         status: resources.status.fail,

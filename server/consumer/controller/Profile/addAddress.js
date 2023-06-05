@@ -1,11 +1,14 @@
-const Consumer = require("../../models/Consumer");
+const ConsumerService = require("../../services/ConsumerService");
 const resources = require("../../config/resources");
 const addToProfile = async (req, res) => {
-  const { country, state, city, zipCode, addressLine1, addressLine2 } =
-    req.body;
-  const consumerID = req.session.passport.user;
   try {
-    const consumerData = await Consumer.findOne({ _id: consumerID });
+    const { country, state, city, zipCode, addressLine1, addressLine2 } =
+      req.body;
+    const consumerID = req.session.passport.user;
+    const consumerRequestData = await ConsumerService.consumerDataByID(
+      consumerID
+    );
+    const consumerData = consumerRequestData.data;
     const consumer = consumerData.address;
     let isAddressPresent = false;
     consumer.forEach((valueObj, index, consumer) => {
@@ -21,21 +24,30 @@ const addToProfile = async (req, res) => {
         message: "This address is already present please try again",
       });
     } else {
-      consumer.push({
+      const addressData = {
         country: country,
         state: state,
         city: city,
         zipCode: zipCode,
         addressLine1: addressLine1,
         addressLine2: addressLine2,
-      });
-
-      const updatedData = await consumerData.save(); // Save the updated consumer document
-      res.status(201).send({
-        status: resources.status.success,
-        message: resources.messages.success.updated,
-        data: updatedData,
-      });
+      };
+      const updatedData = await ConsumerService.addAddressByID(
+        consumerID,
+        addressData
+      );
+      if (updatedData.status == resources.status.fail) {
+        res.status(500).send({
+          status: resources.status.fail,
+          message: updatedData.message,
+        });
+      } else {
+        res.status(201).send({
+          status: resources.status.success,
+          message: resources.messages.success.updated,
+          data: updatedData,
+        });
+      }
     }
   } catch (err) {
     res.status(500).send({
