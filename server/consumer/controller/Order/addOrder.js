@@ -59,11 +59,12 @@ const buyProduct = async (req, res) => {
           } else {
             const newOrder = await newOrderRequest.data;
             newOrder.save();
-            const updateProduct = await ProductDataServices.updateProductByID(
-              productID,
-              productData.quantity,
-              quantity
-            );
+            const updateProduct =
+              await ProductDataServices.updateProductQtyByID(
+                productID,
+                productData.quantity,
+                quantity
+              );
             res.status(200).send({
               status: resources.status.success,
               message: "Your order is added successfully",

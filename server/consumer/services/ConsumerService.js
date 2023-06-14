@@ -134,6 +134,28 @@ const findDataByEmail = async (email) => {
     };
   }
 };
+const passportFindByEmail = async (email) => {
+  const resData = await Consumer.findOne({ email: email });
+  return resData;
+};
+const passportFindByID = async (id) => {
+  const resData = await Consumer.findOne({ _id: id });
+  return resData;
+};
+const getAddressByID = async (id) => {
+  try {
+    const resData = await Consumer.findOne({ _id: id });
+    return {
+      status: resources.status.success,
+      data: resData.address[0],
+    };
+  } catch (err) {
+    return {
+      status: resources.status.fail,
+      message: resources.messages.error.generic(err),
+    };
+  }
+};
 module.exports = {
   consumerDataByID,
   addAddressByID,
@@ -144,4 +166,7 @@ module.exports = {
   newConsumerByObj,
   saveNewPassword,
   findDataByEmail,
+  passportFindByEmail,
+  passportFindByID,
+  getAddressByID,
 };

@@ -15,7 +15,7 @@ const getProductByID = async (productID) => {
     };
   }
 };
-const updateProductByID = async (
+const updateProductQtyByID = async (
   productID,
   productDataQuantity,
   inStockItemsQuantity
@@ -180,9 +180,29 @@ const deleteReviewByReviewID = async (reviewID, productID) => {
     };
   }
 };
+const updateMutipleQTY = async (updateObj) => {
+  try {
+    for (const obj of updateObj) {
+      const resData = await Product.updateOne(
+        { _id: obj.id },
+        {
+          quantity: obj.quantity,
+        }
+      );
+    }
+    return {
+      status: resources.status.success,
+    };
+  } catch (err) {
+    return {
+      status: resources.status.fail,
+      message: resources.messages.error.generic(err),
+    };
+  }
+};
 module.exports = {
   getProductByID,
-  updateProductByID,
+  updateProductQtyByID,
   updateProductAddProduct,
   getMultipleProductByIdSize,
   getMultipleProductById,
@@ -192,4 +212,5 @@ module.exports = {
   productFilterBySearchObj,
   productAddReviewByID,
   deleteReviewByReviewID,
+  updateMutipleQTY,
 };

@@ -70,6 +70,7 @@ const findOrderByID = async (orderID) => {
   } catch (err) {
     return {
       status: resources.status.fail,
+      data: null,
       message: resources.messages.error.generic(err),
     };
   }
@@ -125,6 +126,20 @@ const getProductObjUsingOrderObj = async (productIdObj) => {
     };
   }
 };
+const addMultipleOrder = async (newOrderData) => {
+  try {
+    const resData = await Order.insertMany(newOrderData);
+    return {
+      status: resources.status.success,
+      data: resData,
+    };
+  } catch (err) {
+    return {
+      status: resources.status.fail,
+      message: resources.messages.error.generic(err),
+    };
+  }
+};
 module.exports = {
   addOrderByOrderObject,
   deleteOrderByOrderID,
@@ -134,4 +149,5 @@ module.exports = {
   getOrderFromConsumer,
   getAllProductIDFromConsumerID,
   getProductObjUsingOrderObj,
+  addMultipleOrder,
 };

@@ -41,7 +41,29 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ConsumerResponse"
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      firstName:
+                        type: string
+                      lastName:
+                        type: string
+                      email:
+                        type: string
+                      password:
+                        type: string
+                      phoneNumber:
+                        type: string
+                      _id:
+                        type: string
+                      address:
+                        type: array
+                        items:
+                          type: object
         "400":
           description: Invaild Request
           content:
@@ -67,7 +89,12 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ConsumerLoginRequest"
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
         required: true
       responses:
         "200":
@@ -75,7 +102,42 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ConsumerResponse"
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      firstName:
+                        type: string
+                      lastName:
+                        type: string
+                      email:
+                        type: string
+                      password:
+                        type: string
+                      phoneNumber:
+                        type: string
+                      address:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            country:
+                              type: string
+                            state:
+                              type: string
+                            city:
+                              type: string
+                            zipCode:
+                              type: number
+                            addressLine1:
+                              type: string
+                            addressLine2:
+                              type: string
+                            _id:
+                              type: string
         "400":
           description: Incorrect details
           content:
@@ -101,16 +163,29 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ConsumerForgotRequest"
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: nikolteslaq23@gmail.com
       responses:
         "200":
           description: Successful operation
           content:
             application/json:
-              example:
-                message: string
-                status: "success"
-                data: string
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: The link was sent to your email
+                  data:
+                    type: string
+                    format: uri
+                    example: http://localhost:3000/NewPassword
         "500":
           description: Internal sever error
           content:
@@ -179,7 +254,48 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ConsumerResponse"
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Here is the resource data you wanted
+                  data:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      firstName:
+                        type: string
+                      lastName:
+                        type: string
+                      email:
+                        type: string
+                      password:
+                        type: string
+                      phoneNumber:
+                        type: string
+                      address:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            country:
+                              type: string
+                            state:
+                              type: string
+                            city:
+                              type: string
+                            zipCode:
+                              type: number
+                            addressLine1:
+                              type: string
+                            addressLine2:
+                              type: string
+                            _id:
+                              type: string
         "500":
           description: Internal sever error
           content:
@@ -199,9 +315,31 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/AddressSchema"
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        country:
+                          type: string
+                        state:
+                          type: string
+                        city:
+                          type: string
+                        zipCode:
+                          type: number
+                        addressLine1:
+                          type: string
+                        addressLine2:
+                          type: string
+                        _id:
+                          type: string
         "500":
           description: Internal sever error
           content:
@@ -220,9 +358,28 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/AddressSchema"
+              type: object
+              properties:
+                country:
+                  type: string
+                state:
+                  type: string
+                city:
+                  type: string
+                zipCode:
+                  type: number
+                addressLine1:
+                  type: string
+                addressLine2:
+                  type: string
       responses:
         "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConsumerResponse"
+        "400":
           description: Created
           content:
             application/json:
